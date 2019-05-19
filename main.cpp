@@ -3,12 +3,14 @@
 
 int main()
 {
-    typedef Board<O, X, O,
+    typedef Board<O, E, E,
                   X, O, E,
-                  X, E, O> B;
+                  X, E, E> B;
 
-    std::cout << B::OWin << std::endl;
-    std::cout << B::XWin << std::endl;
+    std::cout << B::EvalOnly<O> << std::endl;
+    std::cout << B::EvalOnly<X> << std::endl;
+    std::cout << B::Score<O> << std::endl;
+    std::cout << B::Score<X> << std::endl;
 
     return 0;
 }

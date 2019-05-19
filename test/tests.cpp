@@ -7,58 +7,70 @@ TEST_CASE("Horizontal wins are detected for O", "[Wins]")
 {
     typedef Board<O, O, O,
                   X, E, X,
-                  E, X, O> BO;
+                  E, X, O> B;
 
-    REQUIRE(BO::OWin);
-    REQUIRE(!BO::XWin);
+    int valO = B::EvalOnly<O>;
+    int valX = B::EvalOnly<X>;
+    REQUIRE(valO == W);
+    REQUIRE(valX == L);
 }
 
 TEST_CASE("Horizontal wins are detected for X", "[Wins]")
 {
     typedef Board<E, O, O,
                   X, X, X,
-                  E, X, O> BX;
+                  E, X, O> B;
 
-    REQUIRE(BX::XWin);
-    REQUIRE(!BX::OWin);
+    int valO = B::EvalOnly<O>;
+    int valX = B::EvalOnly<X>;
+    REQUIRE(valO == L);
+    REQUIRE(valX == X);
 }
 
-TEST_CASE("Vetical wins are detected for O", "[Wins]")
+TEST_CASE("Vertical wins are detected for O", "[Wins]")
 {
     typedef Board<E, X, O,
                   X, E, O,
-                  E, X, O> BO;
+                  E, X, O> B;
 
-    REQUIRE(BO::OWin);
-    REQUIRE(!BO::XWin);
+    int valO = B::EvalOnly<O>;
+    int valX = B::EvalOnly<X>;
+    REQUIRE(valO == W);
+    REQUIRE(valX == L);
 }
 
 TEST_CASE("Vertical wins are detected for X", "[Wins]")
 {
     typedef Board<X, O, O,
                   X, E, E,
-                  X, X, O> BX;
+                  X, X, O> B;
 
-    REQUIRE(BX::XWin);
-    REQUIRE(!BX::OWin);
+    int valO = B::EvalOnly<O>;
+    int valX = B::EvalOnly<X>;
+    REQUIRE(valO == L);
+    REQUIRE(valX == W);
 }
 
 TEST_CASE("Diagonal wins are detected for O", "[Wins]")
 {
     typedef Board<O, X, E,
                   X, O, E,
-                  E, X, O> BO;
+                  E, X, O> B;
 
-    REQUIRE(BO::OWin);
-    REQUIRE(!BO::XWin);
+    int valO = B::EvalOnly<O>;
+    int valX = B::EvalOnly<X>;
+    REQUIRE(valO == W);
+    REQUIRE(valX == L);
 }
 
 TEST_CASE("Diagonal wins are detected for X", "[Wins]")
 {
     typedef Board<E, O, X,
                   O, X, E,
-                  X, X, O> BX;
+                  X, X, O> B;
 
-    REQUIRE(BX::XWin);
-    REQUIRE(!BX::OWin);
+    int valO = B::EvalOnly<O>;
+    int valX = B::EvalOnly<X>;
+    REQUIRE(valO == L);
+    REQUIRE(valX == W);
 }
