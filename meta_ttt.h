@@ -14,21 +14,18 @@ template <Piece p1, Piece p2, Piece p3,
 class LineChecker
 {
 public:
-    enum
-    {
-        Horiz = (p1 == t && p2 == t && p3 == t)
-            || (p4 == t && p5 == t && p6 == t)
-            || (p7 == t && p8 == t && p9 == t),
+    static constexpr bool Horiz = (p1 == t && p2 == t && p3 == t)
+        || (p4 == t && p5 == t && p6 == t)
+        || (p7 == t && p8 == t && p9 == t);
 
-        Vert = (p1 == t && p4 == t && p7 == t)
-            || (p2 == t && p5 == t && p8 == t)
-            || (p3 == t && p6 == t && p9 == t),
+    static constexpr bool Vert = (p1 == t && p4 == t && p7 == t)
+        || (p2 == t && p5 == t && p8 == t)
+        || (p3 == t && p6 == t && p9 == t);
 
-        Diag = (p1 == t && p5 == t && p9 == t)
-            || (p3 == t && p5 == t && p7 == t),
+    static constexpr bool Diag = (p1 == t && p5 == t && p9 == t)
+        || (p3 == t && p5 == t && p7 == t);
 
-        Win = Horiz || Vert || Diag
-    };
+    static constexpr bool Win = Horiz || Vert || Diag;
 };
 
 // Evaluate the position.
@@ -40,12 +37,9 @@ template <Piece p1, Piece p2, Piece p3,
 class Eval
 {
 public:
-    enum
-    {
-        Score = LineChecker<p1, p2, p3, p4, p5, p6, p7, p8, p9, t>::Win ? W
-            : LineChecker<p1, p2, p3, p4, p5, p6, p7, p8, p9, t == O ? X : O>::Win ? L
-            : D
-    };
+    static constexpr int Score = LineChecker<p1, p2, p3, p4, p5, p6, p7, p8, p9, t>::Win ? W
+        : LineChecker<p1, p2, p3, p4, p5, p6, p7, p8, p9, t == O ? X : O>::Win ? L
+        : D;
 };
 
 // Wrap up a result.
@@ -73,16 +67,43 @@ public:
     static constexpr int Full = p1 != E && p2 != E && p3 != E && p4 != E && p5 != E && p6 != E && p7 != E && p8 != E && p9 != E;
     static constexpr bool GameOver = Full || Ev::Score != D;
 
-    typedef typename std::conditional<GameOver, Result<Ev::Score>, typename std::conditional<p1 == E, Node<p, p2, p3, p4, p5, p6, p7, p8, p9, q>, Illegal>::type>::type M1;
-    typedef typename std::conditional<GameOver, Result<Ev::Score>, typename std::conditional<p2 == E, Node<p1, p, p3, p4, p5, p6, p7, p8, p9, q>, Illegal>::type>::type M2;
-    typedef typename std::conditional<GameOver, Result<Ev::Score>, typename std::conditional<p3 == E, Node<p1, p2, p, p4, p5, p6, p7, p8, p9, q>, Illegal>::type>::type M3;
-    typedef typename std::conditional<GameOver, Result<Ev::Score>, typename std::conditional<p4 == E, Node<p1, p2, p3, p, p5, p6, p7, p8, p9, q>, Illegal>::type>::type M4;
-    typedef typename std::conditional<GameOver, Result<Ev::Score>, typename std::conditional<p5 == E, Node<p1, p2, p3, p4, p, p6, p7, p8, p9, q>, Illegal>::type>::type M5;
-    typedef typename std::conditional<GameOver, Result<Ev::Score>, typename std::conditional<p6 == E, Node<p1, p2, p3, p4, p5, p, p7, p8, p9, q>, Illegal>::type>::type M6;
-    typedef typename std::conditional<GameOver, Result<Ev::Score>, typename std::conditional<p7 == E, Node<p1, p2, p3, p4, p5, p6, p, p8, p9, q>, Illegal>::type>::type M7;
-    typedef typename std::conditional<GameOver, Result<Ev::Score>, typename std::conditional<p8 == E, Node<p1, p2, p3, p4, p5, p6, p7, p, p9, q>, Illegal>::type>::type M8;
-    typedef typename std::conditional<GameOver, Result<Ev::Score>, typename std::conditional<p9 == E, Node<p1, p2, p3, p4, p5, p6, p7, p8, p, q>, Illegal>::type>::type M9;
+    // Search each child node.
+    // Need to check that the game is not already over and that the point is not already occupied.
+    typedef typename std::conditional<GameOver, Result<Ev::Score>,
+            typename std::conditional<p1 == E, Node<p, p2, p3, p4, p5, p6, p7, p8, p9, q>,
+            Illegal>::type>::type M1;
 
+    typedef typename std::conditional<GameOver, Result<Ev::Score>,
+            typename std::conditional<p2 == E, Node<p1, p, p3, p4, p5, p6, p7, p8, p9, q>,
+            Illegal>::type>::type M2;
+
+    typedef typename std::conditional<GameOver, Result<Ev::Score>,
+            typename std::conditional<p3 == E, Node<p1, p2, p, p4, p5, p6, p7, p8, p9, q>,
+            Illegal>::type>::type M3;
+
+    typedef typename std::conditional<GameOver, Result<Ev::Score>,
+            typename std::conditional<p4 == E, Node<p1, p2, p3, p, p5, p6, p7, p8, p9, q>,
+            Illegal>::type>::type M4;
+
+    typedef typename std::conditional<GameOver, Result<Ev::Score>,
+            typename std::conditional<p5 == E, Node<p1, p2, p3, p4, p, p6, p7, p8, p9, q>,
+            Illegal>::type>::type M5;
+
+    typedef typename std::conditional<GameOver, Result<Ev::Score>,
+            typename std::conditional<p6 == E, Node<p1, p2, p3, p4, p5, p, p7, p8, p9, q>,
+            Illegal>::type>::type M6;
+
+    typedef typename std::conditional<GameOver, Result<Ev::Score>,
+            typename std::conditional<p7 == E, Node<p1, p2, p3, p4, p5, p6, p, p8, p9, q>,
+            Illegal>::type>::type M7;
+
+    typedef typename std::conditional<GameOver, Result<Ev::Score>,
+            typename std::conditional<p8 == E, Node<p1, p2, p3, p4, p5, p6, p7, p, p9, q>,
+            Illegal>::type>::type M8;
+
+    typedef typename std::conditional<GameOver, Result<Ev::Score>,
+            typename std::conditional<p9 == E, Node<p1, p2, p3, p4, p5, p6, p7, p8, p, q>,
+            Illegal>::type>::type M9;
 
     static constexpr int ChildVals[] = { M1::Score, M2::Score, M3::Score, M4::Score, M5::Score, M6::Score, M7::Score, M8::Score, M9::Score };
 
@@ -100,6 +121,7 @@ public:
     // Get the evaluation of this board state without searching.
     template <Piece p>
     static constexpr int EvalOnly = Eval<p1, p2, p3, p4, p5, p6, p7, p8, p9, p>::Score; 
+
     // Get the evaluation of this board state with search.
     template <Piece p>
     static constexpr int Score = -Node<p1, p2, p3, p4, p5, p6, p7, p8, p9, p>::Score;
