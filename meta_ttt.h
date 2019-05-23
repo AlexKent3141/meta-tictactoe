@@ -59,9 +59,12 @@ struct Node
 {
     typedef Eval<p1, p2, p3, p4, p5, p6, p7, p8, p9, p> Ev;
 
-    static constexpr Piece q = p == O ? X : O;
-    static constexpr int Full = p1 != E && p2 != E && p3 != E && p4 != E && p5 != E && p6 != E && p7 != E && p8 != E && p9 != E;
+    static constexpr int Full = p1 != E && p2 != E && p3 != E &&
+                                p4 != E && p5 != E && p6 != E &&
+                                p7 != E && p8 != E && p9 != E;
+
     static constexpr bool GameOver = Full || Ev::Score != D;
+    static constexpr Piece q = p == O ? X : O;
 
     // This alias defines the node resulting from playing a move at the specified piece location.
     // If the game has already terminated or the move is illegal then a "Result" type will be
@@ -81,7 +84,9 @@ struct Node
     typedef MoveNode<p8, Node<p1, p2, p3, p4, p5, p6, p7, p, p9, q>> M8;
     typedef MoveNode<p9, Node<p1, p2, p3, p4, p5, p6, p7, p8, p, q>> M9;
 
-    static constexpr int ChildVals[] = { M1::Score, M2::Score, M3::Score, M4::Score, M5::Score, M6::Score, M7::Score, M8::Score, M9::Score };
+    static constexpr int ChildVals[] = { M1::Score, M2::Score, M3::Score,
+                                         M4::Score, M5::Score, M6::Score,
+                                         M7::Score, M8::Score, M9::Score };
 
     static constexpr int Score = GameOver ? -Ev::Score
         : -*std::max_element(std::begin(ChildVals), std::end(ChildVals));
