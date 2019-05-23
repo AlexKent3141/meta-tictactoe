@@ -6,6 +6,12 @@ enum Piece { O, X, E };
 // Define the possible results of the game.
 enum Value { W = 1, D = 0, L = -1 };
 
+// Get the other player's piece type.
+constexpr Piece Other(Piece p)
+{
+    return p == O ? X : O;
+};
+
 // This class checks all 3-in-a-row possibilities for the piece type t.
 template <Piece p1, Piece p2, Piece p3,
           Piece p4, Piece p5, Piece p6,
@@ -36,7 +42,7 @@ template <Piece p1, Piece p2, Piece p3,
 struct Eval
 {
     static constexpr int Score = LineChecker<p1, p2, p3, p4, p5, p6, p7, p8, p9, t>::Win ? W
-        : LineChecker<p1, p2, p3, p4, p5, p6, p7, p8, p9, t == O ? X : O>::Win ? L
+        : LineChecker<p1, p2, p3, p4, p5, p6, p7, p8, p9, Other(t)>::Win ? L
         : D;
 };
 
@@ -64,7 +70,6 @@ struct Node
                                 p7 != E && p8 != E && p9 != E;
 
     static constexpr bool GameOver = Full || Ev::Score != D;
-    static constexpr Piece q = p == O ? X : O;
 
     // This alias defines the node resulting from playing a move at the specified piece location.
     // If the game has already terminated or the move is illegal then a "Result" type will be
@@ -74,6 +79,7 @@ struct Node
                      std::conditional_t<pieceAtLocation == E, node, Illegal>>;
 
     // Search each child node.
+    static constexpr Piece q = Other(p);
     typedef MoveNode<p1, Node<p, p2, p3, p4, p5, p6, p7, p8, p9, q>> M1;
     typedef MoveNode<p2, Node<p1, p, p3, p4, p5, p6, p7, p8, p9, q>> M2;
     typedef MoveNode<p3, Node<p1, p2, p, p4, p5, p6, p7, p8, p9, q>> M3;
