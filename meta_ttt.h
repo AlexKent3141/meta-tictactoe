@@ -11,9 +11,8 @@ template <Piece p1, Piece p2, Piece p3,
           Piece p4, Piece p5, Piece p6,
           Piece p7, Piece p8, Piece p9,
           Piece t>
-class LineChecker
+struct LineChecker
 {
-public:
     static constexpr bool Horiz = (p1 == t && p2 == t && p3 == t)
         || (p4 == t && p5 == t && p6 == t)
         || (p7 == t && p8 == t && p9 == t);
@@ -34,9 +33,8 @@ template <Piece p1, Piece p2, Piece p3,
           Piece p4, Piece p5, Piece p6,
           Piece p7, Piece p8, Piece p9,
           Piece t>
-class Eval
+struct Eval
 {
-public:
     static constexpr int Score = LineChecker<p1, p2, p3, p4, p5, p6, p7, p8, p9, t>::Win ? W
         : LineChecker<p1, p2, p3, p4, p5, p6, p7, p8, p9, t == O ? X : O>::Win ? L
         : D;
@@ -44,9 +42,8 @@ public:
 
 // Wrap up a result.
 template<int res>
-class Result
+struct Result
 {
-public:
     static constexpr int Score = res;
 };
 
@@ -58,9 +55,8 @@ template <Piece p1, Piece p2, Piece p3,
           Piece p4, Piece p5, Piece p6,
           Piece p7, Piece p8, Piece p9,
           Piece p>
-class Node
+struct Node
 {
-public:
     typedef Eval<p1, p2, p3, p4, p5, p6, p7, p8, p9, p> Ev;
 
     static constexpr Piece q = p == O ? X : O;
@@ -115,9 +111,8 @@ public:
 template <Piece p1, Piece p2, Piece p3,
           Piece p4, Piece p5, Piece p6,
           Piece p7, Piece p8, Piece p9>
-class Board
+struct Board
 {
-public:
     // Get the evaluation of this board state without searching.
     template <Piece p>
     static constexpr int EvalOnly = Eval<p1, p2, p3, p4, p5, p6, p7, p8, p9, p>::Score; 
